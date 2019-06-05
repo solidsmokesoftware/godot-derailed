@@ -15,8 +15,8 @@ _global_script_class_icons={
 
 [application]
 
-config/name="New Game Project"
-run/main_scene="res://Game.tscn"
+config/name="Derail"
+run/main_scene="res://Demo.tscn"
 config/icon="res://icon.png"
 
 [rendering]
