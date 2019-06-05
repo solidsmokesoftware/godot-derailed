@@ -10,4 +10,7 @@ func _init():
 	
 func random_action():
 	var r = randi() % 4
-	send([actions[r]])
+	send_input([actions[r]])
+	
+	if verbose:
+		print('Bot: random action %s sent' % !actions[r])

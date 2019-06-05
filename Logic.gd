@@ -1,36 +1,39 @@
-extends Node
+extends 'res://DerailClient.gd'
 
 class Actor:
-	var owner
-	var x
-	var y
+	var controller
+	var location
 	
-	func _init(owner, x, y):
-		self.owner = owner
-		self.x = x
-		self.y = y
+	func _init(controller, x, y):
+		self.controller = controller
+		self.location = Vector2.new(x, y)
 
-var actors = []
-
-func start():
-	actors = []
-	return true
+var actors = {}
 
 func process(sender, value):
-	if value == 'spacebar':
-		actors.append(Actor.new(sender, 100, 100))
-	else:
-		for actor in actors:
-			if actor.owner == sender:
-				if value == 'up':
-					actor.y += 10
-				elif value == 'down':
-					actor.y -= 10
-				elif value == 'left':
-					actor.x -= 10
-				elif value == 'right':
-					actor.x += 10
-					
+	if verbose:
+		print('Logic: Processing')
 		
-func output():
-	return actors
+	if value == 'spacebar':
+		actors[sender] = Actor.new(sender, 100, 100)
+		
+		if verbose:
+			print('Logic: new actor %s' % actors)
+			
+	else:
+		var x = 0
+		var y = 0
+		if value == 'up':
+			y += 10
+		elif value == 'down':
+			y -= 10
+		elif value == 'left':
+			x -= 10
+		elif value == 'right':
+			x += 10
+		actors[sender].location.x += x
+		actors[sender].location.y += y
+				
+				if verbose:
+					print('Logic: Actor %s is acting: %s' % [sender, action])
+	send_output(actors)
