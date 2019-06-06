@@ -16,4 +16,5 @@ func _input(event):
 	if value != 'none':
 		if verbose:
 			print('Player: %s' % event) 
-		send_input([value])
+	
+		send(value)

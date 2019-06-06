@@ -1,12 +1,9 @@
 extends Node
 
-signal process_request
-signal update_notification
-signal join_notification
-signal part_notification
-
 var clients = []
 var running = false
+
+var output = []
 
 var verbose = true
 
@@ -17,40 +14,41 @@ func start():
 	running = true	
 	if verbose:
 		print('Manager: started')
-	
+
 func add_client(client):
-	client.connect('client_input', self, 'process')
-	client.connect('client_output', self, 'update_clients')	
-	client.add_manager(self)
+	var id = clients.size()
+	client.id = id
 	clients.append(client)
 	
-	emit_signal('join_notification', client.id)
+	for client in clients:
+		client.process_join(id)
 	
 	if verbose:
-		print('Manager: Client %s add' % client.index)
+		print('Manager: Client %s joined id %s' % [client.client_name, client.id])
 	
 func remove_client(index):
-	clients[index].disconnect('client_input', self, 'process')
-	clients[index].disconnect('client_output', self, 'update_clients')
-	clients[index].remove_manager()
+	clients[index].manager = null
+	clients[index].id = null
 	clients.remove(index)
 	
-	emit_signal('part_notification', index)
-	
+	for client  in clients:
+		client.process_part(index)
+		
 	if verbose:
-		print('Manager: Client %s add' % client.index)
+		print('Manager: Client %s was removed' % index)
 
 func process(sender, value):
-	emit_signal('process_request', sender, value)
-	
+	output = []
+	for client in clients:
+		output.append(client.process_input(sender, value))
+		
 	if verbose:
-		print('Manager: requesting processing')
-		
-func update_clients(sender, value):
-	emit_signal('update_notification', sender, value)
+		print('Manager: Processed input %s from %s' % [sender, value])
 	
+	for client in clients:
+		client.process_output(output)
+		
 	if verbose:
-		print('manager: updating clients')
-		
-		
-		
+		print('Manager: Processed output %s' % str(output))
+
+

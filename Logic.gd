@@ -6,11 +6,11 @@ class Actor:
 	
 	func _init(controller, x, y):
 		self.controller = controller
-		self.location = Vector2.new(x, y)
+		self.location = Vector2(x, y)
 
 var actors = {}
 
-func process(sender, value):
+func process_input(sender, value):
 	if verbose:
 		print('Logic: Processing')
 		
@@ -34,6 +34,6 @@ func process(sender, value):
 		actors[sender].location.x += x
 		actors[sender].location.y += y
 				
-				if verbose:
-					print('Logic: Actor %s is acting: %s' % [sender, action])
-	send_output(actors)
+		if verbose:
+			print('Logic: Actor %s is acting: %s' % [sender, value])
+	send(actors)

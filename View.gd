@@ -1,8 +1,9 @@
 extends 'res://DerailClient.gd'
 
-sprites = {}
+var sprites = {}
 
 var sprite_texture = load('res://icon.png')
+
 
 func new_actor(controller):
 	var sprite = Sprite.new()
@@ -10,12 +11,12 @@ func new_actor(controller):
 	sprite.controller = controller
 	sprites.append(sprite)
 
-func process(sender, output):
+func process_output(output):
 	print('View: outputting %s' % output)
 	for actor in output:
 		if sprites.has(actor):
 			sprites[actor].location = output[actor].location
-		except:
-			sprites[actor] = new_actor()
+		else:
+			sprites[actor] = new_actor(actor)
 			sprites[actor].location = output[actor].location
 			
