@@ -1,5 +1,8 @@
 extends 'res://DerailClient.gd'
 
+func _init():
+	client_name = 'Player'
+
 func _input(event):
 	var value = 'none'
 	if event.is_action_pressed('ui_up'):
@@ -17,4 +20,4 @@ func _input(event):
 		if verbose:
 			print('Player: %s' % event) 
 	
-		send(value)
+		send_input(value)

@@ -1,54 +1,33 @@
 extends Node
 
 var clients = []
-var running = false
-
-var output = []
 
 var verbose = true
 
-func _init():
+func _ready():
+	add_to_group('manager')
 	return
 
-func start():
-	running = true	
-	if verbose:
-		print('Manager: started')
+func get_clients():
+	var ids = 0
+	clients = get_tree().get_nodes_in_group("clients")
+	for client in clients:
+		client.id = ids
+		ids += 1 
+	
 
-func add_client(client):
-	var id = clients.size()
-	client.id = id
-	clients.append(client)
-	
+func process_input(sender, value):
 	for client in clients:
-		client.process_join(id)
-	
-	if verbose:
-		print('Manager: Client %s joined id %s' % [client.client_name, client.id])
-	
-func remove_client(index):
-	clients[index].manager = null
-	clients[index].id = null
-	clients.remove(index)
-	
-	for client  in clients:
-		client.process_part(index)
+		client.process_input(sender, value)
 		
 	if verbose:
-		print('Manager: Client %s was removed' % index)
+		print('Manager: Processed input %s from %s' % [value, sender])
 
-func process(sender, value):
-	output = []
+func process_output(sender, value):
 	for client in clients:
-		output.append(client.process_input(sender, value))
+		client.process_output(sender, value)
 		
 	if verbose:
-		print('Manager: Processed input %s from %s' % [sender, value])
-	
-	for client in clients:
-		client.process_output(output)
-		
-	if verbose:
-		print('Manager: Processed output %s' % str(output))
+		print('Manager: Processed output %s from %s' % [str(value), sender])
 
 
